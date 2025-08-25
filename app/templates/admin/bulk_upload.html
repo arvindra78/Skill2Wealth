@@ -1,0 +1,186 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Bulk Upload{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-cloud-upload-alt me-2"></i>Bulk Upload Content</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Bulk Upload:</strong> Upload multiple files at once. Product names will be auto-generated from filenames. 
+                    You can edit details later from the Products page.
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" id="bulkUploadForm">
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Content Category *</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="ebook">eBooks (PDF files)</option>
+                            <option value="course">Courses (Video files)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="files" class="form-label">Select Files *</label>
+                        <input type="file" class="form-control" id="files" name="files" multiple required>
+                        <div class="form-text" id="file-help">
+                            Select category first to see allowed formats
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I confirm that I have the rights to upload and sell all selected content
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- File preview area -->
+                    <div id="filePreview" class="mb-3" style="display: none;">
+                        <h6>Selected Files:</h6>
+                        <div id="fileList" class="border rounded p-3 bg-light"></div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('admin.products') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-cloud-upload-alt me-2"></i>Upload All Files
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Upload Guidelines -->
+        <div class="card shadow mt-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Bulk Upload Tips</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>File Naming:</h6>
+                        <ul class="small">
+                            <li>Use descriptive filenames</li>
+                            <li>Underscores and hyphens become spaces</li>
+                            <li>Example: "trading_basics.pdf" → "Trading Basics"</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>After Upload:</h6>
+                        <ul class="small">
+                            <li>Products will be created as inactive</li>
+                            <li>Default price set to ₹49</li>
+                            <li>Edit each product to add details</li>
+                            <li>Activate when ready to sell</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('category');
+    const filesInput = document.getElementById('files');
+    const fileHelp = document.getElementById('file-help');
+    const filePreview = document.getElementById('filePreview');
+    const fileList = document.getElementById('fileList');
+    const form = document.getElementById('bulkUploadForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Update file input based on category
+    categorySelect.addEventListener('change', function() {
+        const category = this.value;
+        if (category === 'ebook') {
+            filesInput.accept = '.pdf';
+            fileHelp.textContent = 'PDF files only (max 50MB each)';
+        } else if (category === 'course') {
+            filesInput.accept = '.mp4,.avi,.mov,.wmv,.flv,.webm';
+            fileHelp.textContent = 'Video files: MP4, AVI, MOV, WMV, FLV, WebM (max 500MB each)';
+        } else {
+            filesInput.accept = '';
+            fileHelp.textContent = 'Select category first to see allowed formats';
+        }
+        filesInput.value = '';
+        filePreview.style.display = 'none';
+    });
+
+    // Show file preview
+    filesInput.addEventListener('change', function() {
+        const files = this.files;
+        if (files.length > 0) {
+            fileList.innerHTML = '';
+            let totalSize = 0;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                totalSize += file.size;
+                
+                const fileItem = document.createElement('div');
+                fileItem.className = 'mb-2 p-2 border rounded bg-white';
+                fileItem.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${file.name}</strong>
+                            <small class="text-muted d-block">${sizeMB} MB</small>
+                        </div>
+                        <span class="badge bg-primary">${categorySelect.value}</span>
+                    </div>
+                `;
+                fileList.appendChild(fileItem);
+            }
+            
+            const totalSizeMB = (totalSize / (1024 * 1024)).toFixed(2);
+            const summary = document.createElement('div');
+            summary.className = 'mt-2 p-2 bg-info text-white rounded';
+            summary.innerHTML = `<strong>Total: ${files.length} files, ${totalSizeMB} MB</strong>`;
+            fileList.appendChild(summary);
+            
+            filePreview.style.display = 'block';
+        } else {
+            filePreview.style.display = 'none';
+        }
+    });
+
+    // Form validation and loading state
+    form.addEventListener('submit', function(e) {
+        const files = filesInput.files;
+        const category = categorySelect.value;
+
+        if (files.length === 0) {
+            e.preventDefault();
+            alert('Please select at least one file to upload.');
+            return;
+        }
+
+        // File size validation
+        const maxSize = category === 'ebook' ? 50 * 1024 * 1024 : 500 * 1024 * 1024;
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].size > maxSize) {
+                e.preventDefault();
+                alert(`File "${files[i].name}" is too large. Maximum allowed: ${category === 'ebook' ? '50MB' : '500MB'}`);
+                return;
+            }
+        }
+
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+    });
+});
+</script>
+{% endblock %}

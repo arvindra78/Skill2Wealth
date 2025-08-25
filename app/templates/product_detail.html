@@ -1,0 +1,507 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.title if product.title else product.name }} - Skill2Wealth{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Default styles for ebooks */
+    .product-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+    }
+    
+    .product-image-large {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        font-size: 8rem;
+        height: 400px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .price-display {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #667eea;
+    }
+    
+    .btn-buy-now {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-radius: 50px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-buy-now:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    }
+    
+    .feature-icon {
+        color: #667eea;
+    }
+    
+    .section-header {
+        border-left: 4px solid #667eea;
+        padding-left: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border-radius: 15px;
+        padding: 30px;
+        margin: 30px 0;
+    }
+    
+    .curriculum-item {
+        background: var(--card-bg);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid #667eea;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Course-specific styles */
+    .product-hero.course-hero {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    }
+    
+    .product-image-large.course-image {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    }
+    
+    .price-display.course-price {
+        color: #ff6b6b;
+    }
+    
+    .btn-buy-now.course-btn {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+    }
+    
+    .btn-buy-now.course-btn:hover {
+        box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+    }
+    
+    .feature-icon.course-icon {
+        color: #ff6b6b;
+    }
+    
+    .section-header.course-header {
+        border-left: 4px solid #ff6b6b;
+    }
+    
+    .highlight-box.course-highlight {
+        background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(238, 90, 36, 0.1) 100%);
+    }
+    
+    .curriculum-item.course-item {
+        border-left: 4px solid #ff6b6b;
+    }
+    
+    .info-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        background-color: var(--card-bg);
+    }
+    
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Product Hero Section -->
+<section class="product-hero{% if product.category == 'course' %} course-hero{% endif %}">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-white-50">Home</a></li>
+                {% if product.category == 'ebook' %}
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.ebooks') }}" class="text-white-50">eBooks</a></li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.courses') }}" class="text-white-50">Courses</a></li>
+                {% endif %}
+                <li class="breadcrumb-item active text-white">{{ product.title if product.title else product.name }}</li>
+            </ol>
+        </nav>
+        
+        <div class="text-center">
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill mb-3" style="font-size: 1rem;">
+                {% if product.category == 'ebook' %}
+                    📚 Digital eBook
+                {% else %}
+                    🎥 Video Course
+                {% endif %}
+            </span>
+            <h1 class="display-4 fw-bold mb-3">{{ product.title if product.title else product.name }}</h1>
+            <p class="lead mb-4">{{ product.description }}</p>
+            <div class="price-display mb-4">₹{{ "%.0f"|format(product.price) }}</div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Product Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Product Visual -->
+            <div class="col-lg-5 mb-5">
+                <div class="product-image-large{% if product.category == 'course' %} course-image{% endif %} mb-4">
+                    {% if product.category == 'ebook' %}
+                        <i class="fas fa-book-open"></i>
+                    {% else %}
+                        <i class="fas fa-play-circle"></i>
+                    {% endif %}
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="row g-3">
+                    {% if product.category == 'ebook' %}
+                        <div class="col-6">
+                            <div class="info-card text-center p-3">
+                                <div class="feature-icon{% if product.category == 'course' %} course-icon{% endif %} mb-2"><i class="fas fa-file-pdf fa-2x"></i></div>
+                                <h6 class="fw-bold mb-1">Format</h6>
+                                <small class="text-muted">PDF</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-card text-center p-3">
+                                <div class="feature-icon mb-2"><i class="fas fa-language fa-2x"></i></div>
+                                <h6 class="fw-bold mb-1">Language</h6>
+                                <small class="text-muted">Hindi + Hinglish</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-card text-center p-3">
+                                <div class="feature-icon{% if product.category == 'course' %} course-icon{% endif %} mb-2"><i class="fas fa-book fa-2x"></i></div>
+                                <h6 class="fw-bold mb-1">Pages</h6>
+                                <small class="text-muted">120+</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-card text-center p-3">
+                                <div class="feature-icon mb-2"><i class="fas fa-infinity fa-2x"></i></div>
+                                <h6 class="fw-bold mb-1">Access</h6>
+                                <small class="text-muted">Lifetime</small>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-6">
+                            <div class="info-card text-center p-3">
+                                <div class="feature-icon{% if product.category == 'course' %} course-icon{% endif %} mb-2"><i class="fas fa-clock fa-2x"></i></div>
+                                <h6 class="fw-bold mb-1">Duration</h6>
+                                <small class="text-muted">10+ Hours</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-card text-center p-3">
+                                <div class="feature-icon{% if product.category == 'course' %} course-icon{% endif %} mb-2"><i class="fas fa-video fa-2x"></i></div>
+                                <h6 class="fw-bold mb-1">Videos</h6>
+                                <small class="text-muted">25+ Lessons</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-card text-center p-3">
+                                <div class="feature-icon{% if product.category == 'course' %} course-icon{% endif %} mb-2"><i class="fas fa-language fa-2x"></i></div>
+                                <h6 class="fw-bold mb-1">Language</h6>
+                                <small class="text-muted">Hindi + Hinglish</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-card text-center p-3">
+                                <div class="feature-icon{% if product.category == 'course' %} course-icon{% endif %} mb-2"><i class="fas fa-infinity fa-2x"></i></div>
+                                <h6 class="fw-bold mb-1">Access</h6>
+                                <small class="text-muted">Lifetime</small>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Product Information -->
+            <div class="col-lg-7">
+                <!-- Purchase Section -->
+                <div class="highlight-box{% if product.category == 'course' %} course-highlight{% endif %} mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h3 class="fw-bold mb-1">Special Launch Price!</h3>
+                            <p class="text-muted mb-0">
+                                {% if product.category == 'ebook' %}
+                                    Get instant access to this comprehensive eBook
+                                {% else %}
+                                    Get lifetime access to this complete video course
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <div class="price-display{% if product.category == 'course' %} course-price{% endif %}">₹{{ "%.0f"|format(product.price) }}</div>
+                            <small class="text-muted"><del>₹{{ "%.0f"|format(product.price * 2) }}</del> (50% OFF)</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Purchase Buttons -->
+                    <div class="d-grid gap-2">
+                        {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('store.buy', product_id=product.id) }}" class="btn btn-buy-now{% if product.category == 'course' %} course-btn{% endif %} text-white">
+                                {% if product.category == 'ebook' %}
+                                    📥 Download eBook Now - ₹{{ "%.0f"|format(product.price) }}
+                                {% else %}
+                                    🎥 Start Learning Now - ₹{{ "%.0f"|format(product.price) }}
+                                {% endif %}
+                            </a>
+                            <div class="d-flex align-items-center justify-content-center mt-2">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                <small class="text-muted">30-day money-back guarantee</small>
+                            </div>
+                        {% else %}
+                            <a href="{{ url_for('auth.login') }}" class="btn btn-buy-now text-white">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login to Purchase
+                            </a>
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-user-plus me-2"></i>Create Free Account
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- What You'll Learn -->
+                <div class="mb-4">
+                    <div class="section-header{% if product.category == 'course' %} course-header{% endif %}">
+                        <h4 class="fw-bold">
+                            {% if product.category == 'ebook' %}
+                                What You'll Discover in This eBook:
+                            {% else %}
+                                What You'll Learn in This Course:
+                            {% endif %}
+                        </h4>
+                    </div>
+                    
+                    {% if product.category == 'ebook' %}
+                        <!-- eBook specific content -->
+                        {% if 'Psychology' in product.name %}
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Trading Mindset Mastery:</strong> Develop the mental discipline needed for consistent trading success</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Emotional Control Techniques:</strong> Learn to manage fear, greed, and other trading emotions</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Confidence Building:</strong> Build unshakeable confidence in your trading decisions</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Success Habits:</strong> Daily routines and practices of successful traders</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Goal Setting Framework:</strong> Create and achieve your trading and financial goals</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Overcoming Losses:</strong> How to bounce back stronger from trading setbacks</li>
+                            </ul>
+                        {% elif 'Trading' in product.name and 'Basics' in product.name %}
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Stock Market Fundamentals:</strong> Complete understanding of NSE and BSE markets</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Account Setup Guide:</strong> Step-by-step process to open and use your demat account</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Trading Terminology:</strong> Master all essential trading terms and concepts</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Basic Technical Analysis:</strong> Chart reading and pattern recognition for beginners</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Risk Management:</strong> Protect your capital with proven risk management strategies</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>First Trade Guide:</strong> Complete walkthrough of placing your first trade</li>
+                            </ul>
+                        {% elif 'Motivation' in product.name %}
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Daily Motivation Systems:</strong> Techniques to stay motivated every single day</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Discipline Building:</strong> Create unbreakable discipline in your trading routine</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Overcoming Setbacks:</strong> Mental strategies to bounce back from losses</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Goal Achievement:</strong> Proven methods to achieve your trading targets</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Success Rituals:</strong> Morning and evening routines for trading success</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Long-term Focus:</strong> Maintain motivation for years, not just months</li>
+                            </ul>
+                        {% elif 'Finance' in product.name %}
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Personal Budgeting:</strong> Create and manage budgets that actually work</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Investment Basics:</strong> Understand stocks, mutual funds, and SIP investments</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Emergency Fund:</strong> Build a financial safety net for unexpected expenses</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Tax Planning:</strong> Basic tax planning strategies for young adults</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Goal-based Investing:</strong> Align your investments with your life goals</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Financial Independence:</strong> Create a roadmap to financial freedom</li>
+                            </ul>
+                        {% else %}
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Comprehensive Knowledge:</strong> Complete understanding of the subject matter</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Practical Examples:</strong> Real-world examples and case studies</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Step-by-Step Guide:</strong> Easy-to-follow instructions and methodologies</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Hindi + Hinglish Content:</strong> Content in your comfortable language</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Mobile Friendly:</strong> Read on any device, anywhere</li>
+                                <li class="mb-3"><i class="fas fa-check-circle feature-icon me-3"></i><strong>Instant Access:</strong> Download immediately after purchase</li>
+                            </ul>
+                        {% endif %}
+                    {% else %}
+                        <!-- Course specific content -->
+                        {% if 'Starter' in product.name or 'Beginner' in product.name %}
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 1: Trading Fundamentals (2 hours)</h6>
+                                <p class="text-muted mb-0">Complete introduction to stock markets, how they work, and basic terminology</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 2: Account Setup & First Trade (1.5 hours)</h6>
+                                <p class="text-muted mb-0">Step-by-step guide to opening demat account and placing your first trade</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 3: Technical Analysis Basics (3 hours)</h6>
+                                <p class="text-muted mb-0">Chart reading, candlestick patterns, and basic technical indicators</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 4: Risk Management (2 hours)</h6>
+                                <p class="text-muted mb-0">Position sizing, stop-loss, and capital protection strategies</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 5: Trading Psychology (1.5 hours)</h6>
+                                <p class="text-muted mb-0">Mindset, emotions, and building confidence for consistent results</p>
+                            </div>
+                        {% elif 'Advanced' in product.name %}
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 1: Advanced Technical Analysis (4 hours)</h6>
+                                <p class="text-muted mb-0">Complex patterns, advanced indicators, and multi-timeframe analysis</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 2: Options Trading Strategies (3 hours)</h6>
+                                <p class="text-muted mb-0">Options basics, strategies, and risk management in derivatives</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 3: Portfolio Management (3 hours)</h6>
+                                <p class="text-muted mb-0">Diversification, position sizing, and professional portfolio management</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 4: Market Analysis & Research (2.5 hours)</h6>
+                                <p class="text-muted mb-0">Fundamental analysis, news impact, and market sentiment analysis</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Module 5: Advanced Trading Psychology (2.5 hours)</h6>
+                                <p class="text-muted mb-0">Professional mindset, handling large positions, and scaling strategies</p>
+                            </div>
+                        {% else %}
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-play-circle me-2"></i>Comprehensive Video Lessons</h6>
+                                <p class="text-muted mb-0">10+ hours of HD video content covering all aspects of the subject</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-file-pdf me-2"></i>Downloadable Resources</h6>
+                                <p class="text-muted mb-0">PDF materials, templates, and reference guides for offline study</p>
+                            </div>
+                            <div class="curriculum-item">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-chart-line me-2"></i>Practical Examples</h6>
+                                <p class="text-muted mb-0">Real market examples and case studies from Indian stock exchanges</p>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                <!-- Trust & Guarantee -->
+                <div class="row g-3 mt-4">
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-shield-alt fa-2x feature-icon mb-2"></i>
+                        <h6 class="fw-bold">Secure Payment</h6>
+                        <small class="text-muted">SSL encrypted transactions</small>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-download fa-2x feature-icon mb-2"></i>
+                        <h6 class="fw-bold">Instant Access</h6>
+                        <small class="text-muted">
+                            {% if product.category == 'ebook' %}
+                                Download immediately
+                            {% else %}
+                                Access course now
+                            {% endif %}
+                        </small>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-headset fa-2x feature-icon mb-2"></i>
+                        <h6 class="fw-bold">Support</h6>
+                        <small class="text-muted">Email & chat support</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Products -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="fw-bold mb-3">You might also like</h2>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card product-card h-100">
+                    <div class="product-image">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title fw-bold">Trading Basics for Beginners</h6>
+                        <p class="card-text text-muted small">A simple guide to start your trading journey.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <span class="price-tag">₹49</span>
+                            <a href="{{ url_for('store.product_detail', product_id=1) }}" class="btn btn-outline-primary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card product-card h-100">
+                    <div class="product-image">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title fw-bold">Finance Fundamentals</h6>
+                        <p class="card-text text-muted small">Understand the basics of finance and budgeting.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <span class="price-tag">₹49</span>
+                            <a href="{{ url_for('store.product_detail', product_id=2) }}" class="btn btn-outline-primary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card product-card h-100">
+                    <div class="product-image">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title fw-bold">Psychology of Success</h6>
+                        <p class="card-text text-muted small">Build the right mindset for trading and growth.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <span class="price-tag">₹49</span>
+                            <a href="{{ url_for('store.product_detail', product_id=3) }}" class="btn btn-outline-primary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card product-card h-100">
+                    <div class="product-image">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title fw-bold">Motivation Mastery</h6>
+                        <p class="card-text text-muted small">Stay motivated in your trading and learning journey.</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <span class="price-tag">₹49</span>
+                            <a href="{{ url_for('store.product_detail', product_id=4) }}" class="btn btn-outline-primary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

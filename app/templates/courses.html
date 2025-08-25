@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+
+{% block title %}Trading Courses - Skill2Wealth{% endblock %}
+
+{% block extra_css %}
+<style>
+    .course-hero {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        padding: 80px 0;
+    }
+    
+    .course-card {
+        transition: all 0.3s ease;
+        height: 100%;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .course-price {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #ff6b6b;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    
+    .video-icon {
+        font-size: 4rem;
+        color: #ff6b6b;
+        margin-bottom: 20px;
+    }
+    
+    .course-level {
+        display: inline-block;
+        padding: 5px 15px;
+        background: #28a745;
+        color: white;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .course-level.advanced {
+        background: #dc3545;
+    }
+    
+    .course-level.intermediate {
+        background: #ffc107;
+        color: #000;
+    }
+    
+    .btn-enroll {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        border: none;
+        padding: 12px 30px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-enroll:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+    
+    .course-stats {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 15px 0;
+    }
+    
+    .course-stats .stat {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .course-stats .stat:last-child {
+        margin-bottom: 0;
+    }
+    
+    .course-stats .stat-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ff6b6b;
+    }
+    
+    .course-stats .stat-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+        text-transform: uppercase;
+    }
+    
+    .curriculum-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .curriculum-list li {
+        padding: 8px 0;
+        position: relative;
+        padding-left: 30px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .curriculum-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .curriculum-list li:before {
+        content: "▶";
+        position: absolute;
+        left: 0;
+        color: #ff6b6b;
+        font-weight: bold;
+    }
+    
+    .badge-new {
+        background: #28a745;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        margin-left: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="course-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">🎥 Master Trading with Video Courses</h1>
+                <p class="lead mb-4">
+                    Comprehensive video training programs with HD content, practical examples, 
+                    and step-by-step guidance. Learn from experienced traders in Hindi + Hinglish.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-play me-2"></i>
+                        <span>HD Video Content</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-file-pdf me-2"></i>
+                        <span>PDF Resources</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-infinity me-2"></i>
+                        <span>Lifetime Access</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-play-circle video-icon"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Course Levels Filter -->
+<section class="py-4">
+    <div class="container">
+        <div class="text-center" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+            <h5 class="mb-3">🎯 Choose Your Learning Path</h5>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <button class="btn btn-outline-danger btn-sm" onclick="filterCourses('all')">All Courses</button>
+                <button class="btn btn-outline-success btn-sm" onclick="filterCourses('beginner')">Beginner</button>
+                <button class="btn btn-outline-warning btn-sm" onclick="filterCourses('intermediate')">Intermediate</button>
+                <button class="btn btn-outline-danger btn-sm" onclick="filterCourses('advanced')">Advanced</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Courses Grid -->
+<section class="py-5">
+    <div class="container">
+        {% if courses %}
+            <div class="row g-4" id="courses-grid">
+                {% for course in courses %}
+                <div class="col-lg-6 col-xl-4 course-item" data-level="beginner">
+                    <div class="card course-card h-100">
+                        <div class="position-relative">
+                            <!-- Price Badge -->
+                            <div class="course-price">₹{{ "%.0f"|format(course.price) }}</div>
+                            
+                            <!-- Course Video Thumbnail -->
+                            <div class="card-header text-center" style="height: 250px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); display: flex; align-items: center; justify-content: center;">
+                                <div class="text-center">
+                                    <i class="fas fa-play-circle fa-5x text-white mb-3"></i>
+                                    <div class="text-white fw-bold">HD Video Course</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body d-flex flex-column">
+                            <!-- Course Level -->
+                            <span class="course-level">Beginner Friendly</span>
+                            
+                            <h5 class="card-title">{{ course.name }}</h5>
+                            <p class="card-text text-muted">{{ course.description[:120] }}{% if course.description|length > 120 %}...{% endif %}</p>
+                            
+                            <!-- Course Stats -->
+                            <div class="course-stats">
+                                <div class="row text-center">
+                                    <div class="col-4 stat">
+                                        <div class="stat-number">10+</div>
+                                        <div class="stat-label">Hours</div>
+                                    </div>
+                                    <div class="col-4 stat">
+                                        <div class="stat-number">25+</div>
+                                        <div class="stat-label">Videos</div>
+                                    </div>
+                                    <div class="col-4 stat">
+                                        <div class="stat-number">∞</div>
+                                        <div class="stat-label">Access</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- What You'll Learn -->
+                            <div class="mb-3">
+                                <h6 class="fw-bold">What You'll Learn:</h6>
+                                <ul class="curriculum-list small">
+                                    <li>Complete trading fundamentals</li>
+                                    <li>Technical analysis strategies</li>
+                                    <li>Risk management techniques</li>
+                                    <li>Live market examples</li>
+                                    <li>Mobile trading setup</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Course Details -->
+                            <div class="row text-center mb-3 small">
+                                <div class="col-6">
+                                    <strong>Language:</strong><br>
+                                    <span class="text-muted">Hindi + Hinglish</span>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Format:</strong><br>
+                                    <span class="text-muted">HD Video + PDF</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="mt-auto">
+                                <div class="d-grid gap-2">
+                                    <a href="{{ url_for('store.product_detail', product_id=course.id) }}" class="btn btn-outline-danger">
+                                        <i class="fas fa-info-circle me-2"></i>Course Details
+                                    </a>
+                                    <a href="{{ url_for('store.buy', product_id=course.id) }}" class="btn btn-enroll text-white">
+                                        <i class="fas fa-play me-2"></i>Enroll Now - ₹{{ "%.0f"|format(course.price) }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- No Courses Available -->
+            <div class="text-center py-5">
+                <i class="fas fa-video fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No Courses Available</h4>
+                <p class="text-muted">We're working on creating amazing video courses. Check back soon!</p>
+                <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                    <i class="fas fa-home me-2"></i>Back to Home
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Course Benefits -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold">Why Choose Our Video Courses?</h3>
+            <p class="text-muted">Professional trading education designed for Indian markets</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="p-4">
+                    <i class="fas fa-video fa-3x text-danger mb-3"></i>
+                    <h5>HD Video Quality</h5>
+                    <p class="text-muted small">Crystal clear video content with professional audio</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="p-4">
+                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                    <h5>Live Market Examples</h5>
+                    <p class="text-muted small">Real trading scenarios from NSE and BSE</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="p-4">
+                    <i class="fas fa-file-download fa-3x text-warning mb-3"></i>
+                    <h5>Downloadable Resources</h5>
+                    <p class="text-muted small">PDF guides, templates, and reference materials</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="p-4">
+                    <i class="fas fa-mobile-alt fa-3x text-info mb-3"></i>
+                    <h5>Mobile Learning</h5>
+                    <p class="text-muted small">Watch on any device - phone, tablet, or laptop</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Learning Path -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold">📚 Recommended Learning Path</h3>
+            <p class="text-muted">Follow this sequence for maximum learning impact</p>
+        </div>
+        
+        <div class="row g-4 align-items-center">
+            <div class="col-md-4 text-center">
+                <div class="p-4 border rounded">
+                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">1</div>
+                    <h5>Start with Basics</h5>
+                    <p class="text-muted small">Begin with Trading Fundamentals course to build your foundation</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="p-4 border rounded">
+                    <div class="bg-warning text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">2</div>
+                    <h5>Practice & Learn</h5>
+                    <p class="text-muted small">Apply concepts with our practice exercises and case studies</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="p-4 border rounded">
+                    <div class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">3</div>
+                    <h5>Advanced Strategies</h5>
+                    <p class="text-muted small">Move to advanced courses for professional trading techniques</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h4 class="text-white fw-bold mb-2">Ready to Master Trading? 🚀</h4>
+                <p class="text-white-50 mb-0">Join thousands of students who are already learning with our courses</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <a href="{{ url_for('main.ebooks') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-book me-2"></i>View eBooks
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterCourses(level) {
+    const items = document.querySelectorAll('.course-item');
+    const buttons = document.querySelectorAll('button[onclick*="filterCourses"]');
+    
+    // Update active button
+    buttons.forEach(btn => {
+        btn.classList.remove('btn-success', 'btn-warning', 'btn-danger');
+        if (btn.textContent.includes('All')) {
+            btn.classList.add('btn-outline-danger');
+        } else if (btn.textContent.includes('Beginner')) {
+            btn.classList.add('btn-outline-success');
+        } else if (btn.textContent.includes('Intermediate')) {
+            btn.classList.add('btn-outline-warning');
+        } else if (btn.textContent.includes('Advanced')) {
+            btn.classList.add('btn-outline-danger');
+        }
+    });
+    
+    // Highlight selected button
+    event.target.classList.remove('btn-outline-success', 'btn-outline-warning', 'btn-outline-danger');
+    if (level === 'all') {
+        event.target.classList.add('btn-danger');
+    } else if (level === 'beginner') {
+        event.target.classList.add('btn-success');
+    } else if (level === 'intermediate') {
+        event.target.classList.add('btn-warning');
+    } else if (level === 'advanced') {
+        event.target.classList.add('btn-danger');
+    }
+    
+    // Filter items (for now showing all since we don't have level data)
+    items.forEach(item => {
+        item.style.display = 'block';
+    });
+}
+
+// Add smooth scrolling animation
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.course-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 150);
+    });
+});
+</script>
+{% endblock %}

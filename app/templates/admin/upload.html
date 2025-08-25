@@ -1,0 +1,168 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Upload Content{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-upload me-2"></i>Upload New Content</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Product Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category *</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="ebook">eBook (PDF)</option>
+                                    <option value="course">Course (Video)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description *</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required placeholder="Enter a detailed description of your content..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price (₹) *</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="content_file" class="form-label">Content File *</label>
+                                <input type="file" class="form-control" id="content_file" name="content_file" accept=".pdf,.mp4,.avi,.mov,.wmv,.flv,.webm" required>
+                                <div class="form-text">
+                                    <span id="file-help">Select category first to see allowed formats</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="image_file" class="form-label">Product Image</label>
+                                <input type="file" class="form-control" id="image_file" name="image_file" accept=".jpg,.jpeg,.png,.gif,.webp">
+                                <div class="form-text">Optional: Upload a cover image for your product</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I confirm that I have the rights to upload and sell this content
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('admin.products') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-upload me-2"></i>Upload Content
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Upload Guidelines -->
+        <div class="card shadow mt-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Upload Guidelines</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>eBook Guidelines:</h6>
+                        <ul class="small">
+                            <li>Format: PDF only</li>
+                            <li>Max file size: 50MB</li>
+                            <li>High-quality content recommended</li>
+                            <li>Include table of contents</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Course Guidelines:</h6>
+                        <ul class="small">
+                            <li>Formats: MP4, AVI, MOV, WMV, FLV, WebM</li>
+                            <li>Max file size: 500MB</li>
+                            <li>HD quality recommended (720p+)</li>
+                            <li>Clear audio required</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('category');
+    const contentFileInput = document.getElementById('content_file');
+    const fileHelp = document.getElementById('file-help');
+    const form = document.getElementById('uploadForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Update file input based on category
+    categorySelect.addEventListener('change', function() {
+        const category = this.value;
+        if (category === 'ebook') {
+            contentFileInput.accept = '.pdf';
+            fileHelp.textContent = 'PDF files only (max 50MB)';
+        } else if (category === 'course') {
+            contentFileInput.accept = '.mp4,.avi,.mov,.wmv,.flv,.webm';
+            fileHelp.textContent = 'Video files: MP4, AVI, MOV, WMV, FLV, WebM (max 500MB)';
+        } else {
+            contentFileInput.accept = '';
+            fileHelp.textContent = 'Select category first to see allowed formats';
+        }
+        contentFileInput.value = ''; // Clear selected file when category changes
+    });
+
+    // Form validation and loading state
+    form.addEventListener('submit', function(e) {
+        const contentFile = contentFileInput.files[0];
+        const category = categorySelect.value;
+
+        // File size validation
+        if (contentFile) {
+            const maxSize = category === 'ebook' ? 50 * 1024 * 1024 : 500 * 1024 * 1024; // 50MB for ebooks, 500MB for courses
+            if (contentFile.size > maxSize) {
+                e.preventDefault();
+                alert(`File size too large. Maximum allowed: ${category === 'ebook' ? '50MB' : '500MB'}`);
+                return;
+            }
+        }
+
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+    });
+
+    // File size display
+    contentFileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            fileHelp.textContent += ` (Selected: ${file.name}, ${sizeMB}MB)`;
+        }
+    });
+});
+</script>
+{% endblock %}

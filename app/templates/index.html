@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Skill2Wealth - Digital eBooks & Trading Courses{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    शुरुआती ऑफर - Start Your Trading Journey Today!
+                </h1>
+                <p class="lead mb-4">
+                    Master the art of trading with our comprehensive eBooks and courses. 
+                    Perfect for students and beginners aged 18-28.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{{ url_for('main.ebooks') }}" class="btn btn-light btn-lg px-4">
+                        📚 Browse eBooks
+                    </a>
+                    <a href="{{ url_for('main.courses') }}" class="btn btn-outline-light btn-lg px-4">
+                        🎥 View Courses
+                    </a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-user-plus me-2"></i>Get Started
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="fw-bold mb-3">Why Choose Skill2Wealth?</h2>
+                <p class="text-muted">Empowering the next generation of traders and learners</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-book fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Digital eBooks</h5>
+                        <p class="card-text text-muted">
+                            Access trading, finance, psychology, and motivation eBooks instantly. 
+                            Learn at your own pace, anywhere, anytime.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-graduation-cap fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Trading Courses</h5>
+                        <p class="card-text text-muted">
+                            Comprehensive trading courses with recorded videos and PDF materials. 
+                            Perfect for beginners starting their trading journey.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Secure Payments</h5>
+                        <p class="card-text text-muted">
+                            Multiple payment options including UPI, Razorpay, and Stripe. 
+                            Your security is our top priority.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+{% if products %}
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="fw-bold mb-3">Featured Products</h2>
+                <p class="text-muted">Start with our most popular offerings</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card product-card h-100">
+                    <div class="product-image">
+                        {% if product.category == 'ebook' %}
+                            <i class="fas fa-book"></i>
+                        {% else %}
+                            <i class="fas fa-video"></i>
+                        {% endif %}
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title fw-bold">{{ product.name }}</h6>
+                        <p class="card-text text-muted small flex-grow-1">{{ product.description[:100] }}...</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <span class="price-tag">₹{{ "%.0f"|format(product.price) }}</span>
+                            <a href="{{ url_for('store.product_detail', product_id=product.id) }}" 
+                               class="btn btn-outline-primary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('main.ebooks') }}" class="btn btn-primary btn-lg me-3">
+                Browse eBooks
+            </a>
+            <a href="{{ url_for('main.courses') }}" class="btn btn-outline-primary btn-lg">
+                View Courses
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Pricing Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="fw-bold mb-3">Affordable Pricing</h2>
+                <p class="text-muted">Quality education shouldn't break the bank</p>
+            </div>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-5">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body text-center p-4">
+                        <h5 class="card-title fw-bold text-primary">eBook Bundle</h5>
+                        <div class="my-3">
+                            <span class="display-6 fw-bold">₹49</span>
+                            <span class="text-muted">/ ₹99</span>
+                        </div>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Trading Fundamentals</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Psychology & Mindset</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Motivation & Success</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Instant Download</li>
+                        </ul>
+                        <a href="{{ url_for('main.ebooks') }}" class="btn btn-primary w-100">Browse eBooks</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-5">
+                <div class="card h-100 border-0 shadow border-primary">
+                    <div class="card-body text-center p-4">
+                        <div class="position-absolute top-0 start-50 translate-middle">
+                            <span class="badge bg-primary px-3 py-2 rounded-pill">Most Popular</span>
+                        </div>
+                        <h5 class="card-title fw-bold text-primary">Trading Starter Course</h5>
+                        <div class="my-3">
+                            <span class="display-6 fw-bold">₹199</span>
+                            <span class="text-muted">/ ₹299</span>
+                        </div>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Video Lessons</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>PDF Materials</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Practical Examples</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Lifetime Access</li>
+                        </ul>
+                        <a href="{{ url_for('main.courses') }}" class="btn btn-primary w-100">View Courses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-3">Ready to Start Your Trading Journey?</h2>
+                <p class="lead mb-4">
+                    Join thousands of students who are already learning and growing with Skill2Wealth. 
+                    Start today and transform your financial future!
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-rocket me-2"></i>Get Started Now
+                    </a>
+                    <a href="{{ url_for('main.ebooks') }}" class="btn btn-outline-primary btn-lg px-5">
+                        <i class="fas fa-book me-2"></i>Browse eBooks
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

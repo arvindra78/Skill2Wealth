@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Purchase Successful - Skill2Wealth{% endblock %}
+
+{% block content %}
+<!-- Success Header -->
+<section class="py-5 bg-success text-white">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle fa-5x text-white"></i>
+                </div>
+                <h1 class="display-4 fw-bold mb-3">Payment Successful!</h1>
+                <p class="lead mb-0">
+                    Thank you for your purchase. Your order has been confirmed and you can now access your content.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Order Details -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow">
+                    <div class="card-body p-5">
+                        <h3 class="fw-bold mb-4 text-center">
+                            <i class="fas fa-receipt text-primary me-2"></i>Order Details
+                        </h3>
+                        
+                        <!-- Product Information -->
+                        <div class="row mb-4 p-3 bg-light rounded">
+                            <div class="col-md-3">
+                                <div class="product-image" style="height: 100px;">
+                                    {% if order.product.category == 'ebook' %}
+                                        <i class="fas fa-book fa-3x"></i>
+                                    {% else %}
+                                        <i class="fas fa-video fa-3x"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <h5 class="fw-bold mb-2">{{ order.product.name }}</h5>
+                                <span class="badge bg-primary mb-2">{{ order.product.category|title }}</span>
+                                <p class="text-muted mb-2">{{ order.product.description }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold text-success">₹{{ "%.0f"|format(order.amount) }}</span>
+                                    <small class="text-muted">Order #{{ order.id }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Summary -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3">Order Information</h6>
+                                <div class="mb-2">
+                                    <strong>Order ID:</strong> #{{ order.id }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Order Date:</strong> {{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Payment Method:</strong> {{ order.payment_method|title }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Payment Status:</strong> 
+                                    <span class="badge bg-success">{{ order.payment_status|title }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3">Payment Details</h6>
+                                <div class="mb-2">
+                                    <strong>Product Price:</strong> ₹{{ "%.0f"|format(order.amount) }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>GST (18%):</strong> ₹{{ "%.0f"|format(order.amount * 0.18) }}
+                                </div>
+                                <hr>
+                                <div class="mb-2">
+                                    <strong>Total Amount:</strong> 
+                                    <span class="text-success fw-bold">₹{{ "%.0f"|format(order.amount * 1.18) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Download Section -->
+                        {% if order.product.file_url %}
+                        <div class="text-center mb-4 p-4 bg-success bg-opacity-10 rounded">
+                            <h5 class="fw-bold text-success mb-3">
+                                <i class="fas fa-download me-2"></i>Download Your Content
+                            </h5>
+                            <p class="text-muted mb-3">
+                                Your content is ready for download. Click the button below to get started.
+                            </p>
+                            <a href="{{ url_for('dashboard.download_content', order_id=order.id) }}" 
+                               class="btn btn-success btn-lg">
+                                <i class="fas fa-download me-2"></i>Download Now
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="text-center mb-4 p-4 bg-warning bg-opacity-10 rounded">
+                            <h5 class="fw-bold text-warning mb-3">
+                                <i class="fas fa-clock me-2"></i>Content Coming Soon
+                            </h5>
+                            <p class="text-muted mb-3">
+                                Your content is being prepared and will be available for download shortly. 
+                                We'll notify you via email when it's ready.
+                            </p>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Next Steps -->
+                        <div class="text-center">
+                            <h6 class="fw-bold mb-3">What's Next?</h6>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="p-3 border rounded">
+                                        <i class="fas fa-download fa-2x text-primary mb-2"></i>
+                                        <h6 class="fw-bold">Download Content</h6>
+                                        <small class="text-muted">Access your purchased content immediately</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 border rounded">
+                                        <i class="fas fa-tachometer-alt fa-2x text-primary mb-2"></i>
+                                        <h6 class="fw-bold">Visit Dashboard</h6>
+                                        <small class="text-muted">Manage your account and content</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 border rounded">
+                                        <i class="fas fa-store fa-2x text-primary mb-2"></i>
+                                        <h6 class="fw-bold">Explore More</h6>
+                                        <small class="text-muted">Discover additional learning resources</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="text-center mt-4">
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{{ url_for('dashboard.dashboard_home') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                        </a>
+                        <a href="{{ url_for('main.ebooks') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-book me-2"></i>Browse eBooks
+                        </a>
+                        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-home me-2"></i>Go Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Receipt Download -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h4 class="fw-bold mb-3">Download Receipt</h4>
+                <p class="text-muted mb-4">
+                    Keep a copy of your receipt for your records. You can also access it anytime from your dashboard.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-file-pdf me-2"></i>Download PDF Receipt
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-envelope me-2"></i>Email Receipt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Support Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto">
+                <h4 class="fw-bold mb-3">Need Help?</h4>
+                <p class="text-muted mb-4">
+                    Our support team is here to help you get the most out of your purchase.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-primary">
+                        <i class="fas fa-headset me-2"></i>Contact Support
+                    </a>
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="fas fa-question-circle me-2"></i>FAQ
+                    </a>
+                    <a href="mailto:support@novaa.com" class="btn btn-outline-primary">
+                        <i class="fas fa-envelope me-2"></i>Email Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

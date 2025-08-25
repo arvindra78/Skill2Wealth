@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - Skill2Wealth{% endblock %}
+
+{% block content %}
+<!-- Contact Header -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto">
+                <h1 class="display-4 fw-bold mb-3">Contact Us</h1>
+                <p class="lead text-muted">
+                    Have questions? We're here to help you on your learning journey
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form & Info -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Contact Form -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow">
+                    <div class="card-body p-5">
+                        <h3 class="fw-bold mb-4">Send us a Message</h3>
+                        
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="firstName" class="form-label fw-semibold">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label fw-semibold">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" required>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label for="email" class="form-label fw-semibold">Email Address</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label for="subject" class="form-label fw-semibold">Subject</label>
+                                    <select class="form-select" id="subject" required>
+                                        <option value="">Choose a subject</option>
+                                        <option value="general">General Inquiry</option>
+                                        <option value="technical">Technical Support</option>
+                                        <option value="billing">Billing & Payment</option>
+                                        <option value="content">Content Questions</option>
+                                        <option value="partnership">Partnership</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label for="message" class="form-label fw-semibold">Message</label>
+                                    <textarea class="form-control" id="message" rows="5" 
+                                              placeholder="Tell us how we can help you..." required></textarea>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body p-5">
+                        <h3 class="fw-bold mb-4">Get in Touch</h3>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Email Us</h6>
+                                                                         <p class="text-muted mb-0">support@skill2wealth.com</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Call Us</h6>
+                                    <p class="text-muted mb-0">+91 98765 43210</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Business Hours</h6>
+                                    <p class="text-muted mb-0">Mon - Fri: 9:00 AM - 6:00 PM</p>
+                                    <p class="text-muted mb-0">Sat: 10:00 AM - 2:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Office Address</h6>
+                                    <p class="text-muted mb-0">
+                                                                                 Skill2Wealth Learning Solutions<br>
+                                         Tech Park, Bangalore<br>
+                                         Karnataka 560001, India
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <h6 class="fw-bold mb-3">Follow Us</h6>
+                        <div class="d-flex gap-3">
+                            <a href="#" class="text-decoration-none">
+                                <div class="bg-primary text-white rounded-circle p-3">
+                                    <i class="fab fa-facebook-f"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="text-decoration-none">
+                                <div class="bg-primary text-white rounded-circle p-3">
+                                    <i class="fab fa-twitter"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="text-decoration-none">
+                                <div class="bg-primary text-white rounded-circle p-3">
+                                    <i class="fab fa-instagram"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="text-decoration-none">
+                                <div class="bg-primary text-white rounded-circle p-3">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="fw-bold mb-3">Frequently Asked Questions</h2>
+                <p class="text-muted">Find answers to common questions about our platform</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header" id="faq1">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                                How do I access my purchased content?
+                            </button>
+                        </h2>
+                        <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                After successful payment, you can access your content immediately from your dashboard. 
+                                Simply log in and go to "My Content" to download your eBooks or access your courses.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header" id="faq2">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                                What payment methods do you accept?
+                            </button>
+                        </h2>
+                        <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                We accept multiple payment methods including UPI, Razorpay (credit/debit cards, net banking), 
+                                Stripe (international cards), and bank transfers. All payments are secure and encrypted.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header" id="faq3">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                                Can I get a refund if I'm not satisfied?
+                            </button>
+                        </h2>
+                        <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Yes, we offer a 7-day money-back guarantee. If you're not satisfied with your purchase, 
+                                contact our support team within 7 days for a full refund.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header" id="faq4">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                                Do you offer support for technical issues?
+                            </button>
+                        </h2>
+                        <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Absolutely! Our technical support team is available 24/7 to help you with any issues. 
+                                You can reach us via email, phone, or through the contact form on this page.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-3">Still Have Questions?</h2>
+                <p class="lead mb-4">
+                    Our support team is here to help you succeed in your learning journey.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                         <a href="mailto:support@skill2wealth.com" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-envelope me-2"></i>Email Support
+                    </a>
+                    <a href="tel:+919876543210" class="btn btn-outline-primary btn-lg px-5">
+                        <i class="fas fa-phone me-2"></i>Call Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

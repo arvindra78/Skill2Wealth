@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Skill2Wealth{% endblock %}
+
+{% block content %}
+<!-- Dashboard Header -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="fw-bold mb-3">
+                    <i class="fas fa-tachometer-alt text-primary me-2"></i>Welcome, {{ current_user.username }}!
+                </h1>
+                <p class="text-muted">Access your purchased content and manage your account</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- My Content Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="fw-bold mb-3">
+                    <i class="fas fa-download text-primary me-2"></i>My Content
+                </h2>
+                <p class="text-muted">Download and access your purchased eBooks and courses</p>
+            </div>
+        </div>
+        
+        {% if orders %}
+        <div class="row g-4">
+            {% for order in orders %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            {% if order.product.category == 'ebook' %}
+                                <i class="fas fa-book fa-2x text-primary me-3"></i>
+                            {% else %}
+                                <i class="fas fa-video fa-2x text-primary me-3"></i>
+                            {% endif %}
+                            <div>
+                                <h6 class="card-title fw-bold mb-1">{{ order.product.name }}</h6>
+                                <span class="badge bg-success">{{ order.product.category|title }}</span>
+                            </div>
+                        </div>
+                        
+                        <p class="card-text text-muted flex-grow-1">
+                            {{ order.product.description[:100] }}...
+                        </p>
+                        
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small class="text-muted">Purchased: {{ order.created_at.strftime('%B %d, %Y') }}</small>
+                                <span class="text-success fw-semibold">₹{{ "%.0f"|format(order.amount) }}</span>
+                            </div>
+                            
+                            {% if order.product.file_url %}
+                            <a href="{{ url_for('dashboard.download_content', order_id=order.id) }}" 
+                               class="btn btn-primary w-100">
+                                <i class="fas fa-download me-2"></i>Download Content
+                            </a>
+                            {% else %}
+                            <button class="btn btn-secondary w-100" disabled>
+                                <i class="fas fa-clock me-2"></i>Content Coming Soon
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No content purchased yet</h5>
+            <p class="text-muted">Start your learning journey by exploring our store</p>
+            <a href="{{ url_for('main.ebooks') }}" class="btn btn-primary">
+                <i class="fas fa-store me-2"></i>Browse Store
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Quick Actions -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="fw-bold mb-3">Quick Actions</h2>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-store fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Browse Store</h5>
+                        <p class="card-text text-muted">Explore new eBooks and courses</p>
+                        <a href="{{ url_for('main.ebooks') }}" class="btn btn-outline-primary">Go to Store</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-list fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">My Orders</h5>
+                        <p class="card-text text-muted">View your purchase history</p>
+                        <a href="{{ url_for('dashboard.orders') }}" class="btn btn-outline-primary">View Orders</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-user fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Profile</h5>
+                        <p class="card-text text-muted">Manage your account settings</p>
+                        <a href="{{ url_for('dashboard.profile') }}" class="btn btn-outline-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Learning Progress -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="fw-bold mb-3">
+                    <i class="fas fa-chart-line text-primary me-2"></i>Learning Progress
+                </h2>
+                <p class="text-muted">Track your progress and achievements</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="display-6 fw-bold text-primary mb-2">{{ orders|length }}</div>
+                        <h6 class="text-muted">Products Purchased</h6>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="display-6 fw-bold text-success mb-2">
+                            {{ orders|selectattr('payment_status', 'equalto', 'completed')|list|length }}
+                        </div>
+                        <h6 class="text-muted">Completed Orders</h6>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="display-6 fw-bold text-info mb-2">
+                            {{ orders|selectattr('product.category', 'equalto', 'ebook')|list|length }}
+                        </div>
+                        <h6 class="text-muted">eBooks Owned</h6>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm text-center">
+                    <div class="card-body p-4">
+                        <div class="display-6 fw-bold text-warning mb-2">
+                            {{ orders|selectattr('product.category', 'equalto', 'course')|list|length }}
+                        </div>
+                        <h6 class="text-muted">Courses Enrolled</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block title %}eBooks - Skill2Wealth{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ebook-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 0;
+    }
+    
+    .ebook-card {
+        transition: all 0.3s ease;
+        height: 100%;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .ebook-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .price-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #28a745;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+    
+    .ebook-icon {
+        font-size: 4rem;
+        color: #667eea;
+        margin-bottom: 20px;
+    }
+    
+    .category-filter {
+        background: #f8f9fa;
+        padding: 20px 0;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+    
+    .btn-buy-now {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 12px 30px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-buy-now:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .features-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .features-list li {
+        padding: 5px 0;
+        position: relative;
+        padding-left: 25px;
+    }
+    
+    .features-list li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #28a745;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="ebook-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">📚 Master Trading with Our eBooks</h1>
+                <p class="lead mb-4">
+                    Comprehensive digital guides written specifically for Indian traders. 
+                    Learn at your own pace with practical examples and actionable strategies.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-download me-2"></i>
+                        <span>Instant Download</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-mobile-alt me-2"></i>
+                        <span>Mobile Friendly</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-language me-2"></i>
+                        <span>Hindi + Hinglish</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-book-open ebook-icon"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Category Filter -->
+<section class="py-4">
+    <div class="container">
+        <div class="category-filter text-center">
+            <h5 class="mb-3">📖 Browse eBook Categories</h5>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <button class="btn btn-outline-primary btn-sm" onclick="filterEbooks('all')">All eBooks</button>
+                <button class="btn btn-outline-primary btn-sm" onclick="filterEbooks('psychology')">Psychology</button>
+                <button class="btn btn-outline-primary btn-sm" onclick="filterEbooks('trading')">Trading Basics</button>
+                <button class="btn btn-outline-primary btn-sm" onclick="filterEbooks('motivation')">Motivation</button>
+                <button class="btn btn-outline-primary btn-sm" onclick="filterEbooks('finance')">Finance</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- eBooks Grid -->
+<section class="py-5">
+    <div class="container">
+        {% if ebooks %}
+            <div class="row g-4" id="ebooks-grid">
+                {% for ebook in ebooks %}
+                <div class="col-lg-4 col-md-6 ebook-item" data-category="{{ ebook.name.lower() }}">
+                    <div class="card ebook-card h-100">
+                        <div class="position-relative">
+                            <!-- Price Badge -->
+                            <div class="price-badge">₹{{ "%.0f"|format(ebook.price) }}</div>
+                            
+                            <!-- eBook Icon/Cover -->
+                            <div class="card-header text-center bg-light" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-book fa-4x text-primary"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ ebook.name }}</h5>
+                            <p class="card-text text-muted">{{ ebook.description[:100] }}{% if ebook.description|length > 100 %}...{% endif %}</p>
+                            
+                            <!-- Features -->
+                            <div class="mb-3">
+                                <h6 class="fw-bold">What You'll Get:</h6>
+                                <ul class="features-list small">
+                                    <li>Comprehensive PDF guide</li>
+                                    <li>Practical examples & case studies</li>
+                                    <li>Hindi + Hinglish content</li>
+                                    <li>Lifetime access</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- eBook Details -->
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted">Format</small>
+                                    <div class="fw-bold">PDF</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Language</small>
+                                    <div class="fw-bold">Hindi + Hinglish</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="mt-auto">
+                                <div class="d-grid gap-2">
+                                    <a href="{{ url_for('store.product_detail', product_id=ebook.id) }}" class="btn btn-outline-primary">
+                                        <i class="fas fa-eye me-2"></i>View Details
+                                    </a>
+                                    <a href="{{ url_for('store.buy', product_id=ebook.id) }}" class="btn btn-buy-now text-white">
+                                        <i class="fas fa-download me-2"></i>Buy Now - ₹{{ "%.0f"|format(ebook.price) }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- No eBooks Available -->
+            <div class="text-center py-5">
+                <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No eBooks Available</h4>
+                <p class="text-muted">We're working on adding new eBooks. Check back soon!</p>
+                <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                    <i class="fas fa-home me-2"></i>Back to Home
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Why Choose Our eBooks -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold">Why Choose Our eBooks?</h3>
+            <p class="text-muted">Designed specifically for Indian traders and students</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="p-4">
+                    <i class="fas fa-language fa-3x text-primary mb-3"></i>
+                    <h5>Hindi + Hinglish</h5>
+                    <p class="text-muted small">Content in your comfortable language for better understanding</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="p-4">
+                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                    <h5>Indian Markets</h5>
+                    <p class="text-muted small">Examples and strategies focused on NSE and BSE</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="p-4">
+                    <i class="fas fa-download fa-3x text-warning mb-3"></i>
+                    <h5>Instant Access</h5>
+                    <p class="text-muted small">Download immediately after purchase</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="p-4">
+                    <i class="fas fa-mobile-alt fa-3x text-info mb-3"></i>
+                    <h5>Mobile Friendly</h5>
+                    <p class="text-muted small">Read on any device - phone, tablet, or computer</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h4 class="text-white fw-bold mb-2">Start Your Trading Journey Today! 🚀</h4>
+                <p class="text-white-50 mb-0">Get instant access to our comprehensive eBook collection</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <a href="{{ url_for('main.courses') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-video me-2"></i>View Courses
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterEbooks(category) {
+    const items = document.querySelectorAll('.ebook-item');
+    const buttons = document.querySelectorAll('.category-filter button');
+    
+    // Update active button
+    buttons.forEach(btn => btn.classList.remove('btn-primary'));
+    buttons.forEach(btn => btn.classList.add('btn-outline-primary'));
+    event.target.classList.remove('btn-outline-primary');
+    event.target.classList.add('btn-primary');
+    
+    // Filter items
+    items.forEach(item => {
+        if (category === 'all') {
+            item.style.display = 'block';
+        } else {
+            const itemCategory = item.dataset.category;
+            if (itemCategory.includes(category)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Add smooth scrolling animation
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.ebook-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

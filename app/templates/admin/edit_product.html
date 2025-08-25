@@ -1,0 +1,122 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Edit Product{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Product: {{ product.name }}</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Product Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category</label>
+                                <input type="text" class="form-control" value="{{ product.category.title() }}" disabled>
+                                <div class="form-text">Category cannot be changed after creation</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description *</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required>{{ product.description }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price (₹) *</label>
+                                <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="{{ product.price }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" {% if product.is_active %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_active">
+                                        Product is active (visible to customers)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current files display -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Current Content File</label>
+                            {% if product.file_url %}
+                            <div class="card bg-light">
+                                <div class="card-body py-2">
+                                    <small class="text-muted">{{ product.file_url.split('/')[-1] }}</small>
+                                    <a href="{{ product.file_url }}" class="btn btn-sm btn-outline-primary ms-2" target="_blank">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-muted">No file uploaded</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Current Image</label>
+                            {% if product.image_url %}
+                            <div class="card bg-light">
+                                <div class="card-body py-2">
+                                    <img src="{{ product.image_url }}" alt="Product image" class="img-thumbnail" style="max-height: 60px;">
+                                    <small class="text-muted d-block">{{ product.image_url.split('/')[-1] }}</small>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-muted">No image uploaded</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- File upload fields -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="content_file" class="form-label">Replace Content File</label>
+                                <input type="file" class="form-control" id="content_file" name="content_file" 
+                                       accept="{% if product.category == 'ebook' %}.pdf{% else %}.mp4,.avi,.mov,.wmv,.flv,.webm{% endif %}">
+                                <div class="form-text">
+                                    {% if product.category == 'ebook' %}
+                                    PDF files only (max 50MB)
+                                    {% else %}
+                                    Video files: MP4, AVI, MOV, WMV, FLV, WebM (max 500MB)
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="image_file" class="form-label">Replace Product Image</label>
+                                <input type="file" class="form-control" id="image_file" name="image_file" accept=".jpg,.jpeg,.png,.gif,.webp">
+                                <div class="form-text">Optional: Upload a new cover image</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('admin.products') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Update Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

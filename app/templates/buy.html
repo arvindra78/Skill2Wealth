@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Purchase {{ product.name }} - Skill2Wealth{% endblock %}
+
+{% block content %}
+<!-- Purchase Header -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                {% if product.category == 'ebook' %}
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.ebooks') }}">eBooks</a></li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.courses') }}">Courses</a></li>
+                {% endif %}
+                <li class="breadcrumb-item"><a href="{{ url_for('store.product_detail', product_id=product.id) }}">{{ product.name }}</a></li>
+                <li class="breadcrumb-item active">Purchase</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Purchase Form -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow">
+                    <div class="card-header bg-primary text-white text-center py-4">
+                        <h3 class="mb-0">
+                            <i class="fas fa-shopping-cart me-2"></i>Complete Your Purchase
+                        </h3>
+                    </div>
+                    
+                    <div class="card-body p-5">
+                        <!-- Product Summary -->
+                        <div class="row mb-4 p-3 bg-light rounded">
+                            <div class="col-md-2">
+                                <div class="product-image" style="height: 80px;">
+                                    {% if product.category == 'ebook' %}
+                                        <i class="fas fa-book fa-2x"></i>
+                                    {% else %}
+                                        <i class="fas fa-video fa-2x"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <h5 class="fw-bold mb-1">{{ product.name }}</h5>
+                                <p class="text-muted mb-0">{{ product.description[:100] }}...</p>
+                                <span class="badge bg-primary">{{ product.category|title }}</span>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <div class="price-tag">₹{{ "%.0f"|format(product.price) }}</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Method Selection -->
+                        <form method="POST">
+                            <div class="mb-4">
+                                <h5 class="fw-bold mb-3">Select Payment Method</h5>
+                                
+                                <!-- Razorpay Payment Option -->
+                                <div class="card border-primary shadow-sm">
+                                    <div class="card-body p-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="payment_method" 
+                                                   id="razorpay" value="razorpay" checked style="display: none;">
+                                            <label class="form-check-label w-100" for="razorpay">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-2 text-center">
+                                                        <i class="fas fa-credit-card fa-3x text-primary"></i>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h4 class="fw-bold text-primary mb-2">Razorpay</h4>
+                                                        <p class="text-muted mb-0">Secure & Fast Payment Gateway</p>
+                                                        <small class="text-success"><i class="fas fa-shield-alt me-1"></i>100% Secure</small>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h6 class="fw-bold mb-2">Accepted Payment Methods:</h6>
+                                                        <div class="row g-2">
+                                                            <div class="col-6">
+                                                                <div class="d-flex align-items-center mb-2">
+                                                                    <i class="fas fa-credit-card text-primary me-2"></i>
+                                                                    <small>Credit/Debit Cards</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="d-flex align-items-center mb-2">
+                                                                    <i class="fas fa-mobile-alt text-primary me-2"></i>
+                                                                    <small>UPI (GPay, PhonePe, Paytm)</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="d-flex align-items-center mb-2">
+                                                                    <i class="fas fa-university text-primary me-2"></i>
+                                                                    <small>Net Banking</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="d-flex align-items-center mb-2">
+                                                                    <i class="fas fa-wallet text-primary me-2"></i>
+                                                                    <small>Digital Wallets</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Payment Features -->
+                                <div class="row mt-3">
+                                    <div class="col-md-3 text-center">
+                                        <i class="fas fa-lightning-bolt text-warning mb-2"></i>
+                                        <small class="d-block text-muted">Instant Processing</small>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        <i class="fas fa-shield-alt text-success mb-2"></i>
+                                        <small class="d-block text-muted">Bank-Level Security</small>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        <i class="fas fa-globe text-info mb-2"></i>
+                                        <small class="d-block text-muted">Trusted by Millions</small>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        <i class="fas fa-undo text-primary mb-2"></i>
+                                        <small class="d-block text-muted">Easy Refunds</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Summary -->
+                            <div class="mb-4 p-3 bg-light rounded">
+                                <h6 class="fw-bold mb-3">Order Summary</h6>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Product Price:</span>
+                                    <span>₹{{ "%.0f"|format(product.price) }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>GST (18%):</span>
+                                    <span>₹{{ "%.0f"|format(product.price * 0.18) }}</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between fw-bold">
+                                    <span>Total Amount:</span>
+                                    <span class="text-primary">₹{{ "%.0f"|format(product.price * 1.18) }}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Terms and Conditions -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        I agree to the <a href="#" class="text-decoration-none">Terms & Conditions</a> and 
+                                        <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-lock me-2"></i>Proceed to Payment - ₹{{ "%.0f"|format(product.price * 1.18) }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Security Notice -->
+                <div class="text-center mt-4">
+                    <div class="d-flex align-items-center justify-content-center text-muted">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        <small>Your payment information is secure and encrypted</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Indicators -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <i class="fas fa-shield-alt fa-2x text-primary mb-3"></i>
+                <h6 class="fw-bold">Secure Payments</h6>
+                <small class="text-muted">256-bit SSL encryption</small>
+            </div>
+            <div class="col-md-3">
+                <i class="fas fa-undo fa-2x text-primary mb-3"></i>
+                <h6 class="fw-bold">Money Back Guarantee</h6>
+                <small class="text-muted">7-day refund policy</small>
+            </div>
+            <div class="col-md-3">
+                <i class="fas fa-headset fa-2x text-primary mb-3"></i>
+                <h6 class="fw-bold">24/7 Support</h6>
+                <small class="text-muted">Always here to help</small>
+            </div>
+            <div class="col-md-3">
+                <i class="fas fa-download fa-2x text-primary mb-3"></i>
+                <h6 class="fw-bold">Instant Access</h6>
+                <small class="text-muted">Download immediately</small>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
